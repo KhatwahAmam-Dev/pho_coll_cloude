@@ -4,33 +4,1028 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#0f1a17">
-<title>StoreLog — MM — Amart</title>
-  
+<title>StoreLog — Dokumentasi Harian Toko</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css">
-  <link rel="stylesheet" href="css/camera.css">
-  <link rel="stylesheet" href="css/home.css">
-  <link rel="stylesheet" href="css/layer.css">
-  <link rel="stylesheet" href="css/login.css">
-  
-  <script src="js/script.js" defer></script>
-  <script src="js/IndexedDB.js" defer></script>
-  <script src="js/aksi.js" defer></script>
-  <script src="js/camera.js" defer></script>
-  <script src="js/cloud.js" defer></script>
-  <script src="js/collage.js" defer></script>
-  <script src="js/layer.js" defer></script>
-  <script src="js/mulai.js" defer></script>
-  <script src="js/tampilan.js" defer></script>
-  <script src="js/util.js" defer></script>
+<style>
+:root{
+  --sans:"Plus Jakarta Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --mono:ui-monospace,"SF Mono","Roboto Mono",Menlo,Consolas,monospace;
+  --bg:#eef1ef; --surface:#ffffff; --ink:#12211e; --muted:#5d6f6a; --line:#dbe2df;
+  --green:#1f9d6b; --btn:#16805a; --green-ink:#0f6b48; --stamp:#ff9a2e;
+  --amber:#f08a12; --warn-bg:#fff1dc; --warn-ink:#a45400; --red:#d64545;
+  --panel:#0f1a17; --panel-2:#1a2a26;
+}
+[data-theme="dark"]{
+  --bg:#0b1210; --surface:#141f1c; --ink:#e8f0ed; --muted:#8ea39d; --line:#243430;
+  --green:#2bc084; --green-ink:#7ee0b5; --warn-bg:#2b2113; --warn-ink:#f5b45f;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:500 15px/1.45 var(--sans);-webkit-tap-highlight-color:transparent}
+button{font:inherit;color:inherit;cursor:pointer;border:0;background:none;padding:0}
+button:disabled{cursor:not-allowed}
+:focus-visible{outline:3px solid var(--green);outline-offset:2px}
+[hidden]{display:none!important}
+h1,h2,h3,p{margin:0}
+.screen{min-height:100dvh;display:flex;flex-direction:column}
+.led{font-family:var(--mono);font-weight:700;color:var(--stamp);text-shadow:0 0 14px rgba(255,138,31,.5);font-variant-numeric:tabular-nums}
+.row{display:flex;gap:10px}
+.row .btn{flex:1}
+.btn{height:50px;border-radius:14px;padding:0 18px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;gap:8px}
+.btn.pri{background:var(--btn);color:#fff}
+.btn.sec{background:var(--surface);border:1.5px solid var(--line);color:var(--ink)}
+.btn.dng{background:var(--red);color:#fff}
+.btn:disabled{opacity:.4}
+.icon-btn{width:42px;height:42px;border-radius:14px;display:grid;place-items:center;background:var(--surface);border:1px solid var(--line);color:var(--ink)}
+
+/* Login */
+.login{background:var(--panel);color:#fff}
+.login-hero{flex:1;display:flex;flex-direction:column;justify-content:center;gap:14px;padding:calc(40px + env(safe-area-inset-top)) 28px 30px}
+.login .led{font-size:58px;line-height:1}
+.login .led-date{font-family:var(--mono);color:#a7bbb5;font-size:14px}
+.login h1{font-size:34px;font-weight:800;letter-spacing:-.02em;margin-top:8px}
+.login-hero p{color:#a7bbb5;max-width:32ch}
+.login-card{background:var(--surface);color:var(--ink);border-radius:28px 28px 0 0;padding:26px 24px calc(28px + env(safe-area-inset-bottom));display:grid;gap:14px}
+.field{display:grid;gap:6px;font-weight:700;font-size:13px;color:var(--muted)}
+.field input,.field textarea{height:52px;border-radius:14px;border:1.5px solid var(--line);background:var(--bg);padding:0 14px;font:600 16px var(--sans);color:var(--ink);width:100%}
+.field textarea{height:92px;padding:12px 14px;resize:none}
+.field input:focus,.field textarea:focus{border-color:var(--green);outline:none;box-shadow:0 0 0 3px rgba(31,157,107,.2)}
+.err{color:var(--red);font-weight:600;min-height:1.4em}
+.hint{color:var(--muted);font-size:13px}
+
+/* Home */
+.top{display:flex;justify-content:space-between;align-items:center;padding:calc(14px + env(safe-area-inset-top)) 18px 10px}
+.who{display:flex;gap:12px;align-items:center}
+.av{width:40px;height:40px;border-radius:50%;background:var(--btn);color:#fff;display:grid;place-items:center;font-weight:800}
+.hi{font-weight:800;line-height:1.2}
+.store{color:var(--muted);font-size:13px}
+.icons{display:flex;gap:8px}
+.panel{margin:6px 18px 0;background:var(--panel);color:#fff;border-radius:26px;padding:20px 20px 18px}
+.panel .led{font-size:46px;line-height:1}
+.panel .dl{color:#a7bbb5;margin-top:8px;font-weight:600}
+.seg{display:grid;grid-template-columns:1fr 1fr;background:rgba(255,255,255,.08);border-radius:14px;padding:4px;margin-top:18px}
+.seg button{padding:11px;border-radius:10px;font-weight:700;color:#a7bbb5}
+.seg button.on{background:#fff;color:var(--panel)}
+.prog{margin:16px 18px 4px;display:grid;gap:8px}
+.prog-row{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.ptxt{font-weight:700}
+.bar{height:8px;border-radius:99px;background:var(--line);overflow:hidden}
+.bar i{display:block;height:100%;background:var(--green);border-radius:99px;transition:width .3s}
+.sync{font-size:12px;font-weight:700;padding:5px 10px;border-radius:99px;background:var(--surface);border:1px solid var(--line);color:var(--muted)}
+.sync.ok{color:var(--green-ink)}
+.sync.wait,.sync.busy{color:var(--warn-ink);background:var(--warn-bg);border-color:transparent}
+.sync.off{color:var(--red)}
+.tags{list-style:none;margin:10px 18px 0;padding:0;background:var(--surface);border:1px solid var(--line);border-radius:20px;overflow:hidden}
+.tags li+li{border-top:1px solid var(--line)}
+.tag{display:grid;grid-template-columns:5px 42px 1fr auto;align-items:center;gap:12px;width:100%;text-align:left;padding:0 14px 0 0;min-height:70px}
+.tag .edge{align-self:stretch;background:var(--line)}
+.st-done .edge{background:var(--green)}
+.st-ready .edge{background:var(--green);opacity:.45}
+.st-part .edge{background:var(--amber)}
+.ico{width:42px;height:42px;border-radius:12px;background:var(--bg);display:grid;place-items:center;font-size:21px}
+.tname{display:block;font-weight:700}
+.tmeta{display:flex;gap:8px;align-items:center;margin-top:5px;font-size:12px;color:var(--muted);font-weight:600}
+.pips{display:flex;gap:3px}
+.pips i{width:8px;height:12px;border-radius:2px;background:var(--line)}
+.pips i.f{background:var(--green)}
+.tside{display:grid;justify-items:end;gap:5px}
+.pill{font-size:12px;font-weight:700;padding:3px 9px;border-radius:99px;background:var(--bg);color:var(--muted)}
+.st-done .pill{background:rgba(31,157,107,.15);color:var(--green-ink)}
+.st-ready .pill{background:rgba(31,157,107,.08);color:var(--green-ink);box-shadow:inset 0 0 0 1px rgba(31,157,107,.35)}
+.st-part .pill{background:var(--warn-bg);color:var(--warn-ink)}
+.rg{font-family:var(--mono);font-size:12px;color:var(--muted)}
+.foot-hint{margin:14px 22px calc(28px + env(safe-area-inset-bottom));color:var(--muted);font-size:13px}
+
+/* Camera */
+.cam{background:var(--panel);color:#fff}
+.cam-top{display:grid;grid-template-columns:44px 1fr auto;align-items:center;gap:10px;padding:calc(10px + env(safe-area-inset-top)) 14px 10px}
+.cam .icon-btn{background:rgba(255,255,255,.08);border-color:transparent;color:#fff}
+.ctitle{font-weight:800;line-height:1.2}
+.csub{color:#a7bbb5;font-size:13px;font-family:var(--mono)}
+.cbadge{font-family:var(--mono);font-weight:700;background:rgba(255,255,255,.1);padding:6px 12px;border-radius:99px}
+.vf{position:relative;aspect-ratio:3/4;width:min(100%,calc((100dvh - 250px)*.75));margin:0 auto;border-radius:22px;overflow:hidden;background:#000}
+.vf video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.vf-off{position:absolute;inset:0;display:grid;place-content:center;justify-items:center;gap:12px;background:#0a1210;text-align:center;padding:24px;color:#a7bbb5}
+.vf-off .btn{background:#fff;color:var(--panel)}
+.vf-stamp{position:absolute;top:14px;left:16px;font-size:22px;z-index:2}
+.ctrls{position:absolute;z-index:3;left:0;right:0;bottom:0;padding:26px 16px 16px;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;background:linear-gradient(transparent,rgba(0,0,0,.65))}
+.shutter{width:76px;height:76px;border-radius:50%;background:#fff;border:6px solid rgba(255,255,255,.45);background-clip:padding-box}
+.shutter:active:not(:disabled){transform:scale(.94)}
+.shutter:disabled{opacity:.35}
+.tog{justify-self:start;display:flex;gap:8px;align-items:center;padding:10px 14px;border-radius:99px;background:rgba(255,255,255,.18);backdrop-filter:blur(8px);font-weight:700;font-size:13px;color:#fff}
+.tog .dot{width:9px;height:9px;border-radius:50%;background:#ff6b6b}
+.tog.on .dot{background:#3ddc97}
+.flip{justify-self:end;width:46px;height:46px;border-radius:50%;background:rgba(255,255,255,.18);display:grid;place-items:center;color:#fff}
+.flip:disabled{opacity:.35}
+.flash{position:absolute;inset:0;background:#fff;opacity:0;pointer-events:none;z-index:4}
+.flash.go{animation:fl .22s ease-out}
+@keyframes fl{from{opacity:.85}to{opacity:0}}
+.strip{display:flex;gap:10px;overflow-x:auto;padding:14px 16px 6px;scrollbar-width:none}
+.strip::-webkit-scrollbar{display:none}
+.th{position:relative;flex:0 0 auto;width:62px;text-align:center}
+.th img{width:62px;height:82px;object-fit:cover;border-radius:10px;display:block}
+.th .tt{font-family:var(--mono);font-size:11px;color:#a7bbb5;margin-top:4px;display:block}
+.th .up{position:absolute;top:5px;right:5px;width:11px;height:11px;border-radius:50%;background:var(--amber);border:2px solid var(--panel)}
+.th .up.ok{background:#3ddc97}
+.empty-strip{color:#a7bbb5;padding:6px 4px;font-size:14px}
+.cam .meter{margin:8px 16px 0;display:grid;gap:6px;color:#a7bbb5;font-weight:700;font-size:13px}
+.cam .meter input{height:50px;border-radius:14px;border:1.5px solid #2a3d38;background:#14211d;color:#fff;font:700 18px var(--mono);padding:0 14px;width:100%}
+.cam .meter input:focus{outline:none;border-color:var(--stamp)}
+.cta{position:sticky;bottom:0;margin-top:auto;padding:16px 16px calc(14px + env(safe-area-inset-bottom));background:linear-gradient(transparent,var(--panel) 35%)}
+.cta .btn{width:100%;height:54px;font-size:16px}
+.donebox{margin:6px 16px 0;padding:22px;border-radius:22px;background:var(--panel-2);display:grid;gap:12px;justify-items:start}
+.donebox .ok{width:44px;height:44px;border-radius:50%;background:var(--btn);display:grid;place-items:center;font-size:22px;font-weight:800}
+.donebox h2{font-size:20px;font-weight:800}
+.donebox p{color:#a7bbb5}
+.donebox .row{width:100%}
+.donebox .btn.sec{background:transparent;border-color:#33463f;color:#fff}
+
+.gps{position:absolute;top:14px;right:14px;z-index:2;font:700 12px var(--mono);padding:6px 10px;border-radius:99px;background:rgba(0,0,0,.55);color:#cfd8d5}
+.gps.ok{color:#3ddc97}.gps.warn{color:#ffc069}.gps.bad{color:#ff8a8a}
+.tools{display:flex;justify-content:center;padding:4px 16px}
+.link{color:var(--red);text-decoration:underline;font-weight:700;padding:10px 6px;font-size:14px}
+.cam .link{color:#ff8a8a}
+.vt a{color:var(--stamp);font-weight:700}
+
+/* Layer */
+#layer{position:fixed;inset:0;z-index:50;display:none}
+#layer.on{display:block}
+.scrim{position:absolute;inset:0;background:rgba(6,12,10,.62)}
+.sheet{position:absolute;left:0;right:0;bottom:0;max-height:92dvh;overflow:auto;background:var(--surface);color:var(--ink);border-radius:26px 26px 0 0;padding:22px 18px calc(20px + env(safe-area-inset-bottom));display:grid;gap:14px;animation:up .22s ease-out}
+@keyframes up{from{transform:translateY(24px);opacity:0}}
+.sheet h2{font-size:20px;font-weight:800}
+.sheet p{color:var(--muted)}
+.sheet ul{margin:0;padding-left:20px}
+.busy{padding:34px 0;text-align:center;font-weight:700;color:var(--muted)}
+.cpage{width:100%;display:block;border-radius:14px;border:1px solid var(--line)}
+.warn{color:var(--warn-ink);background:var(--warn-bg);padding:10px 12px;border-radius:12px;font-weight:600;font-size:14px}
+.viewer{position:absolute;inset:0;background:#050a08;display:flex;flex-direction:column}
+.viewer img{flex:1;min-height:0;width:100%;object-fit:contain}
+.vbar{padding:14px 16px calc(16px + env(safe-area-inset-bottom));display:grid;gap:12px;color:#fff}
+.vt{display:grid;gap:2px}
+.vt .led{font-size:24px}
+.vt span{color:#a7bbb5;font-size:13px}
+#toast{position:fixed;left:50%;bottom:calc(96px + env(safe-area-inset-bottom));transform:translateX(-50%);max-width:min(92vw,420px);background:var(--ink);color:var(--bg);padding:12px 16px;border-radius:14px;font-weight:600;font-size:14px;z-index:60;opacity:0;pointer-events:none;transition:opacity .2s;text-align:center}
+#toast.on{opacity:1}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
 </head>
 <body>
 <div id="app"></div>
 <div id="layer"></div>
 <div id="toast" role="status" aria-live="polite"></div>
 
+<script>
+(() => {
+'use strict';
 
+/* ============================================================
+   PENGATURAN — ubah bagian ini saja
+   ============================================================ */
+const CONFIG = {
+  STORE_NAME: 'Nama Toko',          // tampil di header collage
+  SCRIPT_URL: '',                   // URL Web App Apps Script. Kosong = mode demo (tanpa cloud)
+  API_KEY: 'ganti-dengan-kode-rahasia', // harus sama dengan API_KEY di Code.gs
+  DEMO_USERS: { demo: '1234' },     // hanya dipakai saat SCRIPT_URL kosong
+  PHOTO_W: 960,                     // lebar foto hasil (tinggi otomatis 4:3 potret)
+  JPEG_Q: 0.78,
+  // GPS. Angka akurasi dari browser = radius dalam meter (tingkat kepercayaan 95% menurut spesifikasi).
+  GPS_TARGET_M: 30,                 // target akurasi: makin kecil makin ketat
+  GPS_WAJIB: false,                 // true = tombol foto ditolak selama akurasi belum mencapai target
+  STORE_GEO: { lat: null, lng: null, radius: 150 }  // titik toko (isi lat/lng) + radius area toko dalam meter
+};
+
+// Daftar kegiatan per shift. min/max = jumlah foto, req = wajib, meter = minta angka KWH
+const AKTIVITAS = { id:'aktivitas', name:'Aktivitas Harian', icon:'🛒', min:1, max:30, req:true };
+const EXPIRED   = { id:'expired',   name:'Cek Expired',      icon:'📅', min:1, max:30, req:true };
+const RAK       = { id:'rak',       name:'Kebersihan Rak',   icon:'🧽', min:3, max:5,  req:true };
+const SHIFTS = {
+  pagi: { label:'Shift Pagi', cats:[
+    { id:'buka',    name:'Buka Toko',         icon:'🔓', min:1, max:1, req:true },
+    { id:'kwh_pagi',name:'KWH Listrik Pagi',  icon:'⚡', min:1, max:1, req:true, meter:true },
+    { id:'ready',   name:'Store Ready Konsep',icon:'🏪', min:3, max:4, req:true },
+    RAK,
+    { id:'brief_pagi', name:'Briefing Pagi',  icon:'👥', min:1, max:2, req:true },
+    EXPIRED,
+    AKTIVITAS
+  ]},
+  siang: { label:'Shift Siang', cats:[
+    { id:'serah',   name:'Serah Terima Tugas',icon:'🤝', min:1, max:3, req:true },
+    { id:'brief_siang', name:'Briefing Siang',icon:'👥', min:1, max:3, req:true },
+    AKTIVITAS,
+    EXPIRED,
+    RAK,
+    { id:'promo',   name:'Implementasi Promo',icon:'🏷️', min:1, max:10, req:false },
+    { id:'kwh_malam',name:'KWH Listrik Malam',icon:'⚡', min:1, max:1, req:true, meter:true },
+    { id:'closing', name:'Closing',           icon:'🔒', min:1, max:3, req:true }
+  ]}
+};
+
+/* ============================================================
+   Util
+   ============================================================ */
+const HARI=['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
+const BULAN=['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+const MONO='ui-monospace,"SF Mono","Roboto Mono",Menlo,Consolas,monospace';
+const SANS='"Plus Jakarta Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif';
+const $=(s,r=document)=>r.querySelector(s);
+const $$=(s,r=document)=>[...r.querySelectorAll(s)];
+const pad=n=>String(n).padStart(2,'0');
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const dateKey=d=>`${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+const fmtT=ms=>{const d=new Date(ms);return `${pad(d.getHours())}.${pad(d.getMinutes())}`;};
+const fmtTS=ms=>{const d=new Date(ms);return `${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;};
+const fmtDateLong=d=>`${HARI[d.getDay()]}, ${d.getDate()} ${BULAN[d.getMonth()]} ${d.getFullYear()}`;
+const tzLabel=()=>({'-420':'WIB','-480':'WITA','-540':'WIT'}[String(new Date().getTimezoneOffset())]||'');
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+const ls={get:k=>{try{return localStorage.getItem(k);}catch(e){return null;}},set:(k,v)=>{try{localStorage.setItem(k,v);}catch(e){}},del:k=>{try{localStorage.removeItem(k);}catch(e){}}};
+const ICON={
+  back:'<path d="M15 5l-7 7 7 7"/>',
+  logout:'<path d="M9 4H5a1 1 0 0 0-1 1v14a1 1 0 0 0 1 1h4"/><path d="M16 8l4 4-4 4"/><path d="M20 12H9"/>',
+  moon:'<path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/>',
+  sun:'<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>',
+  flip:'<path d="M3 12a9 9 0 0 1 15.5-6.2L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-15.5 6.2L3 16"/><path d="M3 21v-5h5"/>',
+  cam:'<path d="M4 8h3l2-3h6l2 3h3a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1z"/><circle cx="12" cy="13" r="3.5"/>',
+  camoff:'<path d="M4 8h3l2-3h6l2 3h3a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1z"/><circle cx="12" cy="13" r="3.5"/><path d="M3 3l18 18"/>'
+};
+const svg=(n,s=22)=>`<svg viewBox="0 0 24 24" width="${s}" height="${s}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICON[n]}</svg>`;
+
+let toastT;
+function toast(msg){const t=$('#toast');t.textContent=msg;t.classList.add('on');clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove('on'),3000);}
+
+/* ============================================================
+   State + database (IndexedDB)
+   ============================================================ */
+const S={session:null,shift:'pagi',date:dateKey(new Date()),view:'login',catId:null,photos:{},meta:{},camOn:false,facing:'environment',pending:0};
+let db, stream=null, syncing=false, sheet=null;
+const urls=new Map();
+const urlOf=r=>{if(!urls.has(r.id))urls.set(r.id,URL.createObjectURL(r.blob));return urls.get(r.id);};
+const catOf=(shift,id)=>SHIFTS[shift].cats.find(c=>c.id===id);
+const curCat=()=>catOf(S.shift,S.catId);
+const grpOf=id=>`${S.date}|${S.shift}|${id}`;
+
+function openDB(){return new Promise((res,rej)=>{
+  const r=indexedDB.open('storelog',2);
+  r.onupgradeneeded=e=>{const d=r.result;
+    if(e.oldVersion<1){
+      const p=d.createObjectStore('photos',{keyPath:'id'});p.createIndex('grp','grp');p.createIndex('up','up');
+      const c=d.createObjectStore('collages',{keyPath:'id'});c.createIndex('grp','grp');c.createIndex('up','up');
+      d.createObjectStore('meta',{keyPath:'key'});
+    }
+    if(e.oldVersion<2)d.createObjectStore('trash',{keyPath:'id'});};
+  r.onsuccess=()=>{db=r.result;res();};
+  r.onerror=()=>rej(r.error);
+});}
+const idb=(store,mode,fn)=>new Promise((res,rej)=>{
+  const t=db.transaction(store,mode);
+  const q=fn(t.objectStore(store));
+  t.oncomplete=()=>res(q&&'result' in q?q.result:undefined);
+  t.onerror=()=>rej(t.error);
+  t.onabort=()=>rej(t.error);
+});
+
+async function loadDay(){
+  S.date=dateKey(new Date());
+  const prefix=`${S.date}|${S.shift}|`;
+  const range=IDBKeyRange.bound(prefix,prefix+'\uffff');
+  S.photos={};S.meta={};
+  SHIFTS[S.shift].cats.forEach(c=>S.photos[c.id]=[]);
+  const all=await idb('photos','readonly',s=>s.index('grp').getAll(range));
+  all.forEach(r=>{(S.photos[r.cat]||(S.photos[r.cat]=[])).push(r);});
+  Object.values(S.photos).forEach(a=>a.sort((x,y)=>x.takenAt-y.takenAt));
+  const metas=await idb('meta','readonly',s=>s.getAll(range));
+  metas.forEach(m=>{S.meta[m.key.slice(prefix.length)]=m;});
+  await refreshPending();
+}
+async function saveMeta(catId,patch){
+  const m=Object.assign({key:grpOf(catId)},S.meta[catId]||{},patch);
+  S.meta[catId]=m;
+  await idb('meta','readwrite',s=>s.put(m));
+}
+async function refreshPending(){
+  const a=await idb('photos','readonly',s=>s.index('up').count(IDBKeyRange.only(0)));
+  const b=await idb('collages','readonly',s=>s.index('up').count(IDBKeyRange.only(0)));
+  const c=await idb('trash','readonly',s=>s.count());
+  S.pending=a+b+c;paintSync();
+}
+
+/* ============================================================
+   Cloud (Google Apps Script)
+   ============================================================ */
+async function api(action,payload){
+  const r=await fetch(CONFIG.SCRIPT_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},
+    body:JSON.stringify(Object.assign({action,key:CONFIG.API_KEY},payload))});
+  return r.json();
+}
+const b64=blob=>new Promise((res,rej)=>{const f=new FileReader();f.onload=()=>res(String(f.result).split(',')[1]);f.onerror=rej;f.readAsDataURL(blob);});
+
+async function uploadRecord(store,r){
+  const cat=catOf(r.shift,r.cat);
+  const [y,m]=r.date.split('-');
+  const path=[y,`${m}-${BULAN[+m-1]}`,r.date,SHIFTS[r.shift].label,cat.name];
+  const name=store==='photos'
+    ?`${fmtTS(r.takenAt).replace(/:/g,'')}_${cat.id}_${r.id.slice(-4)}.jpg`
+    :`COLLAGE_${cat.id}_hal${r.page}.jpg`;
+  const res=await api('upload',{user:r.user,path,filename:name,mime:'image/jpeg',data:await b64(r.blob),takenAt:r.takenAt||null,geo:r.geo||null});
+  if(!res.ok)throw new Error(res.msg||'Upload gagal');
+  const still=await idb(store,'readonly',s=>s.get(r.id));
+  if(!still){await queueTrash([res.id],'',r.user);return;}   // dihapus saat sedang diunggah
+  r.up=1;r.url=res.url;r.fileId=res.id;
+  await idb(store,'readwrite',s=>s.put(r));
+}
+const fileIdOf=r=>r.fileId||((r.url||'').match(/\/d\/([-\w]{10,})/)||[])[1]||null;
+async function queueTrash(fileIds,note,user){
+  const ids=fileIds.filter(Boolean);
+  if(!ids.length&&!note)return;
+  const list=ids.length?ids:[null];
+  await idb('trash','readwrite',s=>{list.forEach((f,i)=>s.put({id:uid()+i,fileId:f,user,at:Date.now(),note:i===0?note:''}));});
+}
+const collagesOf=grp=>idb('collages','readonly',s=>s.index('grp').getAll(IDBKeyRange.only(grp)));
+const dropLocalCollages=grp=>idb('collages','readwrite',s=>{
+  const req=s.index('grp').openCursor(IDBKeyRange.only(grp));
+  req.onsuccess=()=>{const cur=req.result;if(cur){cur.delete();cur.continue();}};
+  return req;
+});
+const dropUrl=id=>{if(urls.has(id)){URL.revokeObjectURL(urls.get(id));urls.delete(id);}};
+async function syncAll(manual){
+  if(!CONFIG.SCRIPT_URL){if(manual)toast('Mode demo: isi SCRIPT_URL agar foto masuk ke Google Drive.');return;}
+  if(!navigator.onLine){if(manual)toast('Sedang offline. Upload jalan otomatis saat sinyal kembali.');return;}
+  if(syncing)return;
+  syncing=true;paintSync();
+  let fail=0;
+  try{
+    for(const store of ['photos','collages']){
+      const list=await idb(store,'readonly',s=>s.index('up').getAll(IDBKeyRange.only(0)));
+      for(const r of list){try{await uploadRecord(store,r);}catch(e){fail++;console.warn(e);}}
+    }
+    const tr=await idb('trash','readonly',s=>s.getAll());
+    for(const t of tr){
+      try{
+        const res=await api('remove',{fileId:t.fileId,user:t.user,at:t.at,note:t.note});
+        if(!res.ok)throw new Error(res.msg||'Gagal');
+        await idb('trash','readwrite',s=>s.delete(t.id));
+      }catch(e){fail++;console.warn(e);}
+    }
+  }finally{syncing=false;}
+  await refreshPending();
+  if(manual)toast(fail?`${fail} file gagal diunggah, coba lagi nanti.`:'Semua file sudah terunggah.');
+  if(S.view==='cat'&&$('#strip'))paintStrip();
+}
+function paintSync(){
+  let txt,cls;
+  if(!CONFIG.SCRIPT_URL){txt='Mode demo';cls='demo';}
+  else if(!navigator.onLine){txt=S.pending?`Offline, ${S.pending} menunggu`:'Offline';cls='off';}
+  else if(syncing){txt='Mengunggah…';cls='busy';}
+  else if(S.pending){txt=`${S.pending} menunggu upload`;cls='wait';}
+  else{txt='Semua tersimpan di cloud';cls='ok';}
+  $$('.js-sync').forEach(e=>{e.textContent=txt;e.className='sync js-sync '+cls;});
+}
+
+/* ============================================================
+   Kamera
+   ============================================================ */
+const G={watch:null,fixes:[],err:null};
+let shooting=false;
+function startGeo(){
+  if(G.watch!==null||!navigator.geolocation)return;
+  G.err=null;
+  G.watch=navigator.geolocation.watchPosition(p=>{
+    G.err=null;
+    G.fixes.push({lat:p.coords.latitude,lng:p.coords.longitude,acc:p.coords.accuracy,ts:Date.now()});
+    G.fixes=G.fixes.filter(f=>Date.now()-f.ts<45000);
+    paintGeo();
+  },e=>{G.err=e.code;paintGeo();},{enableHighAccuracy:true,maximumAge:0,timeout:20000});
+}
+function stopGeo(){
+  if(G.watch!==null&&navigator.geolocation)navigator.geolocation.clearWatch(G.watch);
+  G.watch=null;G.fixes=[];
+}
+function bestFix(){
+  const t=Date.now(),r=G.fixes.filter(f=>t-f.ts<45000);
+  return r.length?r.reduce((a,b)=>b.acc<a.acc?b:a):null;
+}
+function oneShot(){return new Promise(res=>{
+  if(!navigator.geolocation)return res(null);
+  navigator.geolocation.getCurrentPosition(
+    p=>res({lat:p.coords.latitude,lng:p.coords.longitude,acc:p.coords.accuracy,ts:Date.now()}),
+    ()=>res(null),{enableHighAccuracy:true,maximumAge:30000,timeout:4000});
+});}
+async function fixForShot(){return bestFix()||await oneShot();}
+function distM(a,b,c,d){
+  const R=6371000,t=Math.PI/180,dl=(c-a)*t,dn=(d-b)*t;
+  const h=Math.sin(dl/2)**2+Math.cos(a*t)*Math.cos(c*t)*Math.sin(dn/2)**2;
+  return 2*R*Math.asin(Math.sqrt(h));
+}
+function makeGeo(f){
+  const g={lat:f.lat,lng:f.lng,acc:f.acc,ok:f.acc<=CONFIG.GPS_TARGET_M};
+  const sg=CONFIG.STORE_GEO;
+  if(sg&&sg.lat!=null&&sg.lng!=null){g.dist=Math.round(distM(f.lat,f.lng,sg.lat,sg.lng));g.inside=g.dist<=sg.radius;}
+  return g;
+}
+function paintGeo(){
+  const chip=$('#gpsChip');if(!chip)return;
+  const f=bestFix();let txt,cls;
+  if(!navigator.geolocation){txt='GPS tidak ada';cls='bad';}
+  else if(G.err===1){txt='Izin lokasi ditolak';cls='bad';}
+  else if(!f){txt='GPS mencari…';cls='wait';}
+  else{txt=`GPS ±${Math.round(f.acc)} m`;cls=f.acc<=CONFIG.GPS_TARGET_M?'ok':'warn';}
+  chip.textContent=txt;chip.className='gps '+cls;
+}
+function camError(e){
+  if(!navigator.mediaDevices)return 'Kamera butuh alamat HTTPS. Buka aplikasi lewat https://.';
+  if(e&&e.name==='NotAllowedError')return 'Izin kamera ditolak. Aktifkan izin kamera di pengaturan browser.';
+  if(e&&e.name==='NotFoundError')return 'Kamera tidak ditemukan di perangkat ini.';
+  return 'Kamera tidak bisa dibuka. Tutup aplikasi lain yang memakai kamera, lalu coba lagi.';
+}
+function stopCam(){
+  if(stream){stream.getTracks().forEach(t=>t.stop());stream=null;}
+  const v=$('#vid');if(v)v.srcObject=null;
+  S.camOn=false;
+}
+async function startCam(){
+  stopCam();
+  if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){toast(camError());return;}
+  try{
+    stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:S.facing},width:{ideal:1920},height:{ideal:1080}},audio:false});
+    const v=$('#vid');v.srcObject=stream;await v.play();S.camOn=true;
+  }catch(e){stream=null;S.camOn=false;toast(camError(e));}
+}
+function paintCam(){
+  const off=$('#vfOff');if(!off)return;
+  off.hidden=S.camOn;
+  const t=$('#btnTog');
+  t.classList.toggle('on',S.camOn);
+  $('.lbl',t).textContent=S.camOn?'Kamera nyala':'Kamera mati';
+  $('#btnShoot').disabled=!S.camOn;
+  $('#btnFlip').disabled=!S.camOn;
+}
+function drawStamp(x,W,H,ms,catName,geo){
+  const d=new Date(ms),tz=tzLabel();
+  const m=Math.round(W*.04),bh=Math.round(W*.34);
+  const g=x.createLinearGradient(0,H-bh,0,H);
+  g.addColorStop(0,'rgba(0,0,0,0)');g.addColorStop(1,'rgba(0,0,0,.78)');
+  x.fillStyle=g;x.fillRect(0,H-bh,W,bh);
+  x.textBaseline='alphabetic';x.textAlign='left';
+  let y=H-m;
+  x.font=`600 ${Math.round(W*.03)}px ${MONO}`;
+  if(geo){x.fillStyle=geo.ok?'#7ee0b5':'#ffc069';x.fillText(`${geo.lat.toFixed(5)}, ${geo.lng.toFixed(5)}  ±${Math.round(geo.acc)} m`,m,y);}
+  else{x.fillStyle='#ffc069';x.fillText('Lokasi tidak tersedia',m,y);}
+  y-=Math.round(W*.048);
+  x.font=`600 ${Math.round(W*.034)}px ${SANS}`;x.fillStyle='rgba(255,255,255,.94)';
+  x.fillText(`${d.getDate()} ${BULAN[d.getMonth()]} ${d.getFullYear()}  |  ${catName}`,m,y);
+  y-=Math.round(W*.058);
+  x.font=`700 ${Math.round(W*.078)}px ${MONO}`;
+  x.fillStyle='#ff9a2e';x.shadowColor='rgba(255,140,0,.6)';x.shadowBlur=12;
+  x.fillText(`${fmtTS(ms)}${tz?' '+tz:''}`,m,y);
+  x.shadowBlur=0;
+}
+async function shoot(){
+  if(shooting)return;
+  const c=curCat();
+  if(!S.camOn)return toast('Nyalakan kamera dulu.');
+  if(S.meta[c.id]&&S.meta[c.id].done)return;
+  const list=S.photos[c.id]||(S.photos[c.id]=[]);
+  if(list.length>=c.max)return toast(`Maksimal ${c.max} foto untuk kegiatan ini.`);
+  if(CONFIG.GPS_WAJIB){
+    const bf=bestFix();
+    if(!bf)return toast('GPS belum terkunci. Aktifkan lokasi lalu tunggu sebentar.');
+    if(bf.acc>CONFIG.GPS_TARGET_M)return toast(`GPS masih ±${Math.round(bf.acc)} m, target ±${CONFIG.GPS_TARGET_M} m. Tunggu atau pindah ke area yang lebih terbuka.`);
+  }
+  const v=$('#vid');if(!v||!v.videoWidth)return toast('Kamera belum siap, tunggu sebentar.');
+  shooting=true;
+  try{
+    const now=Date.now();                    // jam dicatat saat tombol ditekan
+    const vw=v.videoWidth,vh=v.videoHeight,ratio=3/4;
+    let sw=vw,sh=vw/ratio;if(sh>vh){sh=vh;sw=vh*ratio;}
+    const W=CONFIG.PHOTO_W,H=Math.round(W/ratio);
+    const cv=document.createElement('canvas');cv.width=W;cv.height=H;
+    const x=cv.getContext('2d');
+    x.drawImage(v,(vw-sw)/2,(vh-sh)/2,sw,sh,0,0,W,H);   // bingkai diambil saat itu juga
+    const fl=$('#flash');fl.classList.remove('go');void fl.offsetWidth;fl.classList.add('go');
+    if(navigator.vibrate)navigator.vibrate(25);
+    const fix=await fixForShot();
+    const geo=fix?makeGeo(fix):null;
+    drawStamp(x,W,H,now,c.name,geo);
+    const blob=await new Promise(r=>cv.toBlob(r,'image/jpeg',CONFIG.JPEG_Q));
+    const rec={id:uid(),grp:grpOf(c.id),date:S.date,shift:S.shift,cat:c.id,takenAt:now,user:S.session.user,blob,geo,up:0,url:null};
+    await idb('photos','readwrite',s=>s.put(rec));
+    list.push(rec);
+    paintStrip();refreshPending();syncAll(false);
+  }finally{shooting=false;}
+}
+
+/* ============================================================
+   Collage
+   ============================================================ */
+function rr(x,px,py,w,h,r){x.beginPath();x.moveTo(px+r,py);x.arcTo(px+w,py,px+w,py+h,r);x.arcTo(px+w,py+h,px,py+h,r);x.arcTo(px,py+h,px,py,r);x.arcTo(px,py,px+w,py,r);x.closePath();}
+function pill(x,text,px,py,font,fg,bg,padX,h){
+  x.font=font;const w=x.measureText(text).width+padX*2;
+  x.fillStyle=bg;rr(x,px,py,w,h,h/2);x.fill();
+  x.fillStyle=fg;x.textBaseline='middle';x.textAlign='left';x.fillText(text,px+padX,py+h/2+1);
+  return w;
+}
+function collageChips(cat,chunk,all,page,pages){
+  const base=(t,kind)=>({t,font:`600 24px ${SANS}`,
+    fg:kind==='warn'?'#ffd9a3':kind==='ok'?'#b8f5d6':'#dff3ea',
+    bg:kind==='warn'?'rgba(240,138,18,.30)':kind==='ok'?'rgba(43,192,132,.28)':'rgba(255,255,255,.12)'});
+  const chips=[base(SHIFTS[S.shift].label),base(`Petugas ${S.session.nama}`),base(`${all.length} foto`)];
+  if(pages>1)chips.push(base(`Halaman ${page+1} dari ${pages}`));
+  const withGeo=all.filter(p=>p.geo),noGeo=all.length-withGeo.length,weak=withGeo.filter(p=>!p.geo.ok).length;
+  if(withGeo.length){
+    const b=withGeo.reduce((a,c)=>c.geo.acc<a.geo.acc?c:a);
+    chips.push(base(`Lokasi ${b.geo.lat.toFixed(5)}, ${b.geo.lng.toFixed(5)} (±${Math.round(b.geo.acc)} m)`));
+    const sg=CONFIG.STORE_GEO;
+    if(sg&&sg.lat!=null){
+      const out=withGeo.filter(p=>p.geo.inside===false).length;
+      chips.push(out?base(`Di luar area toko: ${out} foto`,'warn'):base('Di area toko','ok'));
+    }
+  }
+  if(weak)chips.push(base(`GPS kurang akurat: ${weak} foto`,'warn'));
+  if(noGeo)chips.push(base(`Tanpa GPS: ${noGeo} foto`,'warn'));
+  return chips;
+}
+function flowChips(mx,chips,P,W,y0){
+  let px=P,y=y0;const out=[];
+  chips.forEach(c=>{
+    mx.font=c.font;const w=mx.measureText(c.t).width+36;
+    if(px+w>W-P&&px>P){px=P;y+=56;}
+    out.push(Object.assign({},c,{x:px,y,w}));px+=w+10;
+  });
+  return{out,bottom:y+46};
+}
+async function makeCollage(cat,photos,meter){
+  const all=[...photos].sort((a,b)=>a.takenAt-b.takenAt);
+  const pages=Math.ceil(all.length/9),per=Math.ceil(all.length/pages);
+  const out=[];
+  for(let p=0;p<pages;p++)out.push(await drawPage(cat,all.slice(p*per,(p+1)*per),all,p,pages,meter));
+  return out;
+}
+async function drawPage(cat,chunk,all,page,pages,meter){
+  const W=1080,P=40,G=14,FOOT=96;
+  const n=chunk.length;
+  const chips=collageChips(cat,chunk,all,page,pages);
+  const mx=document.createElement('canvas').getContext('2d');
+  const flow=flowChips(mx,chips,P,W,268);
+  const HEAD=flow.bottom+34;
+  const cols=n===1?1:(n===2||n===4)?2:3;
+  const rows=Math.ceil(n/cols);
+  let cw=(W-2*P-(cols-1)*G)/cols;if(n===1)cw=720;
+  const ch=cw*4/3;
+  const gridH=rows*ch+(rows-1)*G;
+  const H=Math.round(HEAD+24+gridH+24+FOOT);
+  const cv=document.createElement('canvas');cv.width=W;cv.height=H;
+  const x=cv.getContext('2d');
+  x.fillStyle='#eef1ef';x.fillRect(0,0,W,H);
+  const g=x.createLinearGradient(0,0,W,HEAD);g.addColorStop(0,'#146b4a');g.addColorStop(1,'#0f1a17');
+  x.fillStyle=g;x.fillRect(0,0,W,HEAD);
+  x.textBaseline='alphabetic';x.textAlign='left';
+  x.fillStyle='rgba(255,255,255,.72)';x.font=`600 26px ${SANS}`;
+  x.fillText(`Dokumentasi harian ${CONFIG.STORE_NAME}`,P,62);
+  let fs=66;x.font=`800 ${fs}px ${SANS}`;
+  while(x.measureText(cat.name).width>W-2*P&&fs>36){fs-=2;x.font=`800 ${fs}px ${SANS}`;}
+  x.fillStyle='#fff';x.fillText(cat.name,P,138);
+  const ts=all.map(p=>p.takenAt),a=Math.min(...ts),b=Math.max(...ts),tz=tzLabel();
+  const rng=fmtT(a)===fmtT(b)?fmtT(a):`${fmtT(a)} – ${fmtT(b)}`;
+  const w1=pill(x,`${rng}${tz?' '+tz:''}`,P,166,`700 44px ${MONO}`,'#ff9a2e','rgba(0,0,0,.38)',24,80);
+  const dateTxt=fmtDateLong(new Date(a));
+  let ds=28;x.font=`600 ${ds}px ${SANS}`;
+  while(P+w1+14+x.measureText(dateTxt).width+44>W-P&&ds>18){ds--;x.font=`600 ${ds}px ${SANS}`;}
+  pill(x,dateTxt,P+w1+14,166,`600 ${ds}px ${SANS}`,'#fff','rgba(255,255,255,.16)',22,80);
+  flow.out.forEach(c=>{pill(x,c.t,c.x,c.y,c.font,c.fg,c.bg,18,46);});
+  const gy=HEAD+24;
+  for(let i=0;i<n;i++){
+    const r=Math.floor(i/cols),c=i%cols,inRow=Math.min(cols,n-r*cols);
+    const rowW=inRow*cw+(inRow-1)*G;
+    const x0=(W-rowW)/2+c*(cw+G),y0=gy+r*(ch+G);
+    const bmp=await createImageBitmap(chunk[i].blob);
+    x.save();rr(x,x0,y0,cw,ch,18);x.clip();x.drawImage(bmp,x0,y0,cw,ch);x.restore();
+    if(bmp.close)bmp.close();
+    const t=fmtT(chunk[i].takenAt),big=cols===1;
+    x.font=`700 ${big?30:24}px ${MONO}`;
+    const tw=x.measureText(t).width+22,th=big?46:38;
+    x.fillStyle='rgba(0,0,0,.66)';rr(x,x0+12,y0+12,tw,th,th/2);x.fill();
+    x.fillStyle='#ff9a2e';x.textBaseline='middle';x.fillText(t,x0+23,y0+12+th/2+1);
+  }
+  const fy=H-FOOT/2;
+  const now=new Date();
+  x.textBaseline='middle';x.textAlign='left';x.fillStyle='#5d6f6a';x.font=`600 24px ${SANS}`;
+  x.fillText(`Dibuat ${pad(now.getDate())}/${pad(now.getMonth()+1)}/${now.getFullYear()} ${pad(now.getHours())}.${pad(now.getMinutes())}`,P,fy);
+  if(meter){
+    x.font=`700 26px ${MONO}`;
+    const t=`Meter ${meter} kWh`,w=x.measureText(t).width+36;
+    x.fillStyle='#12211e';rr(x,W-P-w,fy-26,w,52,26);x.fill();
+    x.fillStyle='#ff9a2e';x.textAlign='left';x.fillText(t,W-P-w+18,fy+1);
+  }else{
+    x.textAlign='right';x.font=`800 26px ${SANS}`;x.fillStyle='#146b4a';x.fillText('StoreLog',W-P,fy);
+  }
+  return new Promise(r=>cv.toBlob(r,'image/jpeg',0.9));
+}
+async function saveCollages(c,blobs){
+  const grp=grpOf(c.id);
+  const old=await collagesOf(grp);
+  await queueTrash(old.map(fileIdOf),'',S.session.user);   // collage lama di cloud dipindah ke _Dihapus
+  await dropLocalCollages(grp);
+  await idb('collages','readwrite',s=>{
+    blobs.forEach((b,i)=>s.put({id:`${grp}|${i+1}`,grp,date:S.date,shift:S.shift,cat:c.id,page:i+1,user:S.session.user,blob:b,up:0,url:null}));
+  });
+}
+async function showCollage(c,fresh){
+  layer(`<div class="scrim"></div><div class="sheet"><div class="busy">Menyusun collage…</div></div>`);
+  let recs=[];
+  if(!fresh)recs=await idb('collages','readonly',s=>s.index('grp').getAll(IDBKeyRange.only(grpOf(c.id))));
+  let blobs;
+  if(recs.length){recs.sort((a,b)=>a.page-b.page);blobs=recs.map(r=>r.blob);}
+  else{
+    try{await document.fonts.load(`800 40px "Plus Jakarta Sans"`);}catch(e){}
+    try{
+      blobs=await makeCollage(c,S.photos[c.id]||[],S.meta[c.id]&&S.meta[c.id].meter);
+      await saveCollages(c,blobs);
+    }catch(e){console.error(e);closeLayer();return toast('Collage gagal dibuat. Coba lagi.');}
+  }
+  sheet={cat:c,fresh,pages:blobs.map(b=>({blob:b,url:URL.createObjectURL(b)}))};
+  const cloud=CONFIG.SCRIPT_URL?'Collage masuk antrean upload ke cloud.':'Mode demo: collage hanya tersimpan di HP.';
+  layer(`<div class="scrim" data-a="closesheet"></div>
+  <div class="sheet" role="dialog" aria-label="Collage ${esc(c.name)}">
+    <div><h2>Collage ${esc(c.name)}</h2><p>${cloud} Mengirim ke grup itu opsional.</p></div>
+    ${sheet.pages.map((p,i)=>`<img class="cpage" src="${p.url}" alt="Collage halaman ${i+1}">
+      <button class="btn sec" data-a="dl" data-i="${i}">Unduh${sheet.pages.length>1?' halaman '+(i+1):''}</button>`).join('')}
+    <div class="row"><button class="btn sec" data-a="share">Bagikan</button><button class="btn pri" data-a="closesheet">Selesai</button></div>
+  </div>`);
+  refreshPending();syncAll(false);
+}
+function downloadPage(i){
+  const p=sheet.pages[i],a=document.createElement('a');
+  a.href=p.url;a.download=`${S.date}_${sheet.cat.id}_${i+1}.jpg`;
+  document.body.appendChild(a);a.click();a.remove();
+}
+async function sharePages(){
+  const files=sheet.pages.map((p,i)=>new File([p.blob],`${S.date}_${sheet.cat.id}_${i+1}.jpg`,{type:'image/jpeg'}));
+  if(navigator.canShare&&navigator.canShare({files})){
+    try{await navigator.share({files,title:`${sheet.cat.name} ${S.date}`});}catch(e){}
+  }else toast('Perangkat ini belum bisa membagikan file. Pakai Unduh, lalu kirim manual.');
+}
+
+/* ============================================================
+   Layer (sheet / modal / viewer)
+   ============================================================ */
+function layer(html){const l=$('#layer');l.innerHTML=html;l.classList.add('on');}
+function closeLayer(){
+  const l=$('#layer');l.classList.remove('on');l.innerHTML='';
+  if(sheet){sheet.pages.forEach(p=>URL.revokeObjectURL(p.url));}
+}
+async function closeSheet(){
+  const fresh=sheet&&sheet.fresh;
+  closeLayer();sheet=null;
+  if(fresh)await go('home');else if(S.view==='cat')render();
+}
+
+/* ============================================================
+   Tampilan
+   ============================================================ */
+function status(c){
+  const n=(S.photos[c.id]||[]).length,m=S.meta[c.id]||{};
+  if(m.done)return['done','Selesai'];
+  if(n===0)return c.req?['todo','Belum']:['todo','Opsional'];
+  if(n<c.min)return['part','Kurang foto'];
+  return['ready','Siap diselesaikan'];
+}
+function rangeText(list){
+  if(!list.length)return '';
+  const ts=list.map(p=>p.takenAt),a=Math.min(...ts),b=Math.max(...ts);
+  return fmtT(a)===fmtT(b)?fmtT(a):`${fmtT(a)}–${fmtT(b)}`;
+}
+function tplLogin(){
+  return `<div class="screen login">
+    <div class="login-hero">
+      <div class="led js-clock">00:00:00</div>
+      <div class="led-date">${fmtDateLong(new Date())}</div>
+      <h1>StoreLog</h1>
+      <p>Foto harian toko, tersusun per kegiatan dan siap dibagikan.</p>
+    </div>
+    <form class="login-card" id="loginForm" autocomplete="on">
+      <label class="field">Username<input id="lu" autocomplete="username" autocapitalize="none" spellcheck="false" required></label>
+      <label class="field">PIN<input id="lp" type="password" inputmode="numeric" autocomplete="current-password" required></label>
+      <p class="err" id="lerr" role="alert"></p>
+      <button class="btn pri" type="submit" id="lbtn">Masuk</button>
+      ${CONFIG.SCRIPT_URL?'':'<p class="hint">Mode demo aktif. Masuk dengan username demo dan PIN 1234.</p>'}
+    </form>
+  </div>`;
+}
+function tplHome(){
+  const cats=SHIFTS[S.shift].cats;
+  const req=cats.filter(c=>c.req),doneN=req.filter(c=>S.meta[c.id]&&S.meta[c.id].done).length;
+  const pct=req.length?Math.round(doneN/req.length*100):0;
+  const dark=document.documentElement.dataset.theme==='dark';
+  return `<div class="screen home">
+    <header class="top">
+      <div class="who"><div class="av">${esc(S.session.nama.charAt(0).toUpperCase())}</div>
+        <div><div class="hi">Halo, ${esc(S.session.nama)}</div><div class="store">${esc(CONFIG.STORE_NAME)}</div></div></div>
+      <div class="icons">
+        <button class="icon-btn" data-a="theme" aria-label="${dark?'Tema terang':'Tema gelap'}">${svg(dark?'sun':'moon',20)}</button>
+        <button class="icon-btn" data-a="logout" aria-label="Keluar">${svg('logout',20)}</button>
+      </div>
+    </header>
+    <section class="panel">
+      <div class="led js-clock">00:00:00</div>
+      <div class="dl">${fmtDateLong(new Date())}${tzLabel()?' '+tzLabel():''}</div>
+      <div class="seg" role="group" aria-label="Pilih shift">
+        ${Object.entries(SHIFTS).map(([k,v])=>`<button data-a="shift" data-v="${k}" class="${S.shift===k?'on':''}" aria-pressed="${S.shift===k}">${v.label}</button>`).join('')}
+      </div>
+    </section>
+    <section class="prog">
+      <div class="prog-row"><span class="ptxt">${doneN} dari ${req.length} kegiatan wajib selesai</span>
+        <button class="sync js-sync" data-a="sync">…</button></div>
+      <div class="bar" role="progressbar" aria-valuenow="${pct}" aria-valuemin="0" aria-valuemax="100"><i style="width:${pct}%"></i></div>
+    </section>
+    <ul class="tags">
+      ${cats.map(c=>{
+        const list=S.photos[c.id]||[],n=list.length,[st,lbl]=status(c);
+        const np=Math.min(Math.max(c.min,n),10);
+        const pips=Array.from({length:np},(_,i)=>`<i class="${i<n?'f':''}"></i>`).join('');
+        return `<li><button class="tag st-${st}" data-a="open" data-id="${c.id}">
+          <span class="edge"></span><span class="ico" aria-hidden="true">${c.icon}</span>
+          <span><span class="tname">${esc(c.name)}</span>
+            <span class="tmeta"><span class="pips">${pips}</span>${n} foto${c.min===c.max?'':', target '+c.min+' sampai '+c.max}</span></span>
+          <span class="tside"><span class="pill">${lbl}</span><span class="rg">${rangeText(list)}</span></span>
+        </button></li>`;}).join('')}
+    </ul>
+    ${cats.some(c=>(S.photos[c.id]||[]).length||S.meta[c.id])?`<div class="tools"><button class="link" data-a="resetshift">Reset seluruh ${SHIFTS[S.shift].label}</button></div>`:''}
+    <p class="foot-hint">Foto hanya bisa diambil lewat kamera aplikasi. Jam tercatat saat tombol foto ditekan.</p>
+  </div>`;
+}
+function stripHTML(){
+  const c=curCat(),list=S.photos[c.id]||[];
+  if(!list.length)return '<div class="empty-strip">Belum ada foto. Ambil foto pertama dengan tombol putih.</div>';
+  return list.map(r=>`<button class="th" data-a="view" data-id="${r.id}"><img src="${urlOf(r)}" alt="Foto jam ${fmtT(r.takenAt)}"><span class="up ${r.up?'ok':''}"></span><span class="tt">${fmtT(r.takenAt)}</span></button>`).join('');
+}
+function tplCat(){
+  const c=curCat(),list=S.photos[c.id]||[],m=S.meta[c.id]||{},done=!!m.done;
+  const target=c.min===c.max?c.min:`${c.min}–${c.max}`;
+  return `<div class="screen cam">
+    <header class="cam-top">
+      <button class="icon-btn" data-a="back" aria-label="Kembali">${svg('back')}</button>
+      <div><div class="ctitle">${esc(c.name)}</div><div class="csub" id="camSub"></div></div>
+      <div class="cbadge" id="camCnt"></div>
+    </header>
+    ${done?`<div class="donebox"><div class="ok" aria-hidden="true">✓</div>
+        <h2>Kegiatan selesai</h2>
+        <p>${list.length} foto, rentang waktu ${rangeText(list)}${tzLabel()?' '+tzLabel():''}.${m.meter?' Angka meter '+esc(m.meter)+' kWh.':''}</p>
+        <div class="row"><button class="btn pri" data-a="seecollage">Lihat collage</button><button class="btn sec" data-a="reopen">Buka kembali</button></div></div>`
+    :`<div class="vf" id="vf">
+        <video id="vid" playsinline muted autoplay></video>
+        <div class="led vf-stamp js-clock">00:00:00</div>
+        <div class="gps wait" id="gpsChip">GPS mencari…</div>
+        <div class="vf-off" id="vfOff"><div aria-hidden="true">${svg('camoff',40)}</div><div>Kamera mati</div>
+          <button class="btn" data-a="camtoggle">Nyalakan kamera</button></div>
+        <div class="flash" id="flash"></div>
+        <div class="ctrls">
+          <button class="tog" id="btnTog" data-a="camtoggle" aria-label="Nyalakan atau matikan kamera"><span class="dot"></span><span class="lbl">Kamera mati</span></button>
+          <button class="shutter" id="btnShoot" data-a="shoot" aria-label="Ambil foto"></button>
+          <button class="flip" id="btnFlip" data-a="flip" aria-label="Balik kamera">${svg('flip',22)}</button>
+        </div></div>`}
+    <div class="strip" id="strip">${stripHTML()}</div>
+    ${c.meter&&!done?`<label class="meter">Angka meter KWH<input id="meter" inputmode="decimal" placeholder="contoh 12345.6" value="${esc(m.meter||'')}"></label>`:''}
+    ${(list.length||done)?`<div class="tools"><button class="link" data-a="resetcat">Reset kegiatan ini</button></div>`:''}
+    ${done?'':`<div class="cta"><button class="btn pri" id="btnFinish" data-a="finish">Selesai dan buat collage</button></div>`}
+  </div>`;
+}
+function paintStrip(){
+  const c=curCat();if(!c)return;
+  const list=S.photos[c.id]||[],target=c.min===c.max?c.min:`${c.min}–${c.max}`;
+  const st=$('#strip');if(st)st.innerHTML=stripHTML();
+  const cnt=$('#camCnt');if(cnt)cnt.textContent=`${list.length}/${c.max}`;
+  const sub=$('#camSub');
+  if(sub)sub.textContent=list.length?`Rentang ${rangeText(list)}${tzLabel()?' '+tzLabel():''}`:`Target ${target} foto`;
+  const f=$('#btnFinish');if(f)f.disabled=list.length<c.min;
+}
+function render(){
+  const app=$('#app');
+  app.innerHTML=S.view==='login'?tplLogin():S.view==='home'?tplHome():tplCat();
+  paintSync();tick();
+  if(S.view==='cat'){paintStrip();paintCam();paintGeo();}
+}
+function tick(){const t=fmtTS(Date.now());$$('.js-clock').forEach(e=>e.textContent=t);if($('#gpsChip'))paintGeo();}
+async function go(view,catId){
+  stopCam();S.view=view;S.catId=catId||null;
+  if(view!=='login')startGeo();
+  if(view!=='login')await loadDay();
+  render();
+  if(view==='cat'&&!(S.meta[catId]&&S.meta[catId].done)){await startCam();paintCam();}
+}
+
+/* ============================================================
+   Aksi
+   ============================================================ */
+function applyTheme(){
+  const t=ls.get('storelog.theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');
+  document.documentElement.dataset.theme=t;
+}
+function openViewer(id){
+  const r=(S.photos[S.catId]||[]).find(p=>p.id===id);if(!r)return;
+  const g=r.geo;
+  const geoLine=g
+    ?`<span>Lokasi ${g.lat.toFixed(5)}, ${g.lng.toFixed(5)} (±${Math.round(g.acc)} m)${g.inside===false?', di luar area toko':''}. <a href="https://maps.google.com/?q=${g.lat},${g.lng}" target="_blank" rel="noopener">Lihat di peta</a></span>`
+    :'<span>Lokasi tidak tercatat</span>';
+  layer(`<div class="viewer" role="dialog" aria-label="Foto jam ${fmtT(r.takenAt)}">
+    <img src="${urlOf(r)}" alt="Foto jam ${fmtT(r.takenAt)}">
+    <div class="vbar"><div class="vt"><b class="led">${fmtTS(r.takenAt)}</b><span>${fmtDateLong(new Date(r.takenAt))}</span>${geoLine}</div>
+      <div class="row"><button class="btn dng" data-a="delfoto" data-id="${r.id}">Hapus foto</button><button class="btn sec" data-a="closelayer">Tutup</button></div></div>
+  </div>`);
+}
+function confirmSheet(o){
+  layer(`<div class="scrim" data-a="closelayer"></div><div class="sheet" role="dialog" aria-label="${esc(o.title)}">
+    <h2>${esc(o.title)}</h2><p>${o.body}</p>
+    ${o.warn?`<p class="warn">${o.warn}</p>`:''}
+    ${o.reason?`<label class="field">Alasan<textarea id="why" placeholder="Contoh: foto buram atau salah objek"></textarea></label>`:''}
+    ${o.type?`<label class="field">Ketik RESET untuk melanjutkan<input id="typed" autocapitalize="characters" autocomplete="off"></label>`:''}
+    <div class="row"><button class="btn sec" data-a="closelayer">Batal</button><button class="btn dng" data-a="${o.okAction}" data-id="${o.okData||''}">${o.okLabel}</button></div>
+  </div>`);
+}
+const cloudNote=()=>CONFIG.SCRIPT_URL?' Salinan di cloud dipindah ke folder _Dihapus dan tercatat di log, tidak hilang permanen.':'';
+function askDelete(id){
+  const c=curCat(),r=(S.photos[c.id]||[]).find(p=>p.id===id);if(!r)return;
+  const done=S.meta[c.id]&&S.meta[c.id].done;
+  confirmSheet({title:'Hapus foto ini?',
+    body:`Foto jam ${fmtT(r.takenAt)} dihapus dari aplikasi.${cloudNote()}`,
+    warn:done?'Kegiatan ini sudah selesai. Menghapus foto akan membuka kembali kegiatan dan membuang collage lama, jadi collage perlu dibuat ulang.':'',
+    okLabel:'Hapus foto',okAction:'confdel',okData:id});
+}
+async function reopenAndDropCollages(c){
+  const grp=grpOf(c.id);
+  await saveMeta(c.id,{done:false});
+  const recs=await collagesOf(grp);
+  await queueTrash(recs.map(fileIdOf),'',S.session.user);
+  await dropLocalCollages(grp);
+}
+async function doDelete(id){
+  const c=curCat(),list=S.photos[c.id]||[],r=list.find(p=>p.id===id);if(!r)return;
+  const wasDone=!!(S.meta[c.id]&&S.meta[c.id].done);
+  await idb('photos','readwrite',s=>s.delete(id));
+  S.photos[c.id]=list.filter(p=>p.id!==id);
+  dropUrl(r.id);
+  await queueTrash([fileIdOf(r)],`Hapus foto ${c.name} jam ${fmtT(r.takenAt)} (${SHIFTS[S.shift].label}, ${S.date})`,S.session.user);
+  if(wasDone)await reopenAndDropCollages(c);
+  closeLayer();await refreshPending();
+  if(wasDone){toast('Kegiatan dibuka kembali. Buat collage ulang setelah selesai.');await go('cat',c.id);}
+  else{paintStrip();toast('Foto dihapus.');}
+  syncAll(false);
+}
+async function wipeCat(c){
+  const grp=grpOf(c.id),list=S.photos[c.id]||[];
+  const cols=await collagesOf(grp);
+  const ids=[...list.map(fileIdOf),...cols.map(fileIdOf)];
+  await idb('photos','readwrite',s=>{list.forEach(p=>s.delete(p.id));});
+  await dropLocalCollages(grp);
+  await idb('meta','readwrite',s=>s.delete(grp));
+  list.forEach(p=>dropUrl(p.id));
+  delete S.meta[c.id];S.photos[c.id]=[];
+  return{ids,n:list.length};
+}
+function askResetCat(){
+  const c=curCat(),n=(S.photos[c.id]||[]).length;
+  confirmSheet({title:`Reset ${c.name}?`,
+    body:`Semua foto (${n}), angka meter, dan collage kegiatan ini dihapus dari aplikasi, lalu kamu bisa mengulang dari awal.${cloudNote()}`,
+    reason:true,okLabel:'Reset kegiatan',okAction:'confresetcat'});
+}
+async function doResetCat(){
+  const why=($('#why').value||'').trim();
+  if(!why){$('#why').focus();return toast('Isi alasan reset dulu.');}
+  const c=curCat(),w=await wipeCat(c);
+  await queueTrash(w.ids,`Reset kegiatan ${c.name} (${w.n} foto, ${SHIFTS[S.shift].label}, ${S.date}). Alasan: ${why}`,S.session.user);
+  closeLayer();await refreshPending();toast('Kegiatan direset. Silakan mulai lagi.');
+  await go('cat',c.id);syncAll(false);
+}
+function askResetShift(){
+  const label=SHIFTS[S.shift].label;
+  const n=SHIFTS[S.shift].cats.reduce((a,c)=>a+(S.photos[c.id]||[]).length,0);
+  confirmSheet({title:`Reset seluruh ${label}?`,
+    body:`Semua foto (${n}), angka meter, dan collage ${label} hari ini dihapus dari aplikasi.${cloudNote()}`,
+    warn:'Di dalam aplikasi, tindakan ini tidak bisa dibatalkan.',
+    reason:true,type:true,okLabel:'Reset semua',okAction:'confresetshift'});
+}
+async function doResetShift(){
+  const why=($('#why').value||'').trim();
+  if(($('#typed').value||'').trim().toUpperCase()!=='RESET')return toast('Ketik RESET untuk melanjutkan.');
+  if(!why){$('#why').focus();return toast('Isi alasan reset dulu.');}
+  const label=SHIFTS[S.shift].label;
+  let ids=[],n=0;
+  for(const c of SHIFTS[S.shift].cats){const w=await wipeCat(c);ids=ids.concat(w.ids);n+=w.n;}
+  await queueTrash(ids,`Reset seluruh ${label} (${n} foto, ${S.date}). Alasan: ${why}`,S.session.user);
+  closeLayer();await refreshPending();toast(`${label} direset.`);
+  await go('home');syncAll(false);
+}
+async function finishCat(){
+  const c=curCat(),list=S.photos[c.id]||[];
+  if(list.length<c.min)return toast(`Minimal ${c.min} foto untuk kegiatan ini.`);
+  if(c.meter){
+    const v=($('#meter').value||'').trim();
+    if(!v){$('#meter').focus();return toast('Isi angka meter KWH dulu.');}
+    await saveMeta(c.id,{meter:v});
+  }
+  await saveMeta(c.id,{done:true,doneAt:Date.now()});
+  stopCam();
+  await showCollage(c,true);
+}
+function askLogout(){
+  const miss=SHIFTS[S.shift].cats.filter(c=>c.req&&!(S.meta[c.id]&&S.meta[c.id].done));
+  layer(`<div class="scrim" data-a="closelayer"></div><div class="sheet" role="dialog" aria-label="Keluar">
+    <h2>Keluar dari akun?</h2>
+    ${miss.length?`<p>Kegiatan wajib ${SHIFTS[S.shift].label} yang belum selesai:</p>
+      <ul>${miss.map(c=>`<li>${esc(c.name)}</li>`).join('')}</ul>
+      <label class="field">Alasan keluar<textarea id="why" placeholder="Tulis alasan singkat"></textarea></label>`:''}
+    ${S.pending?`<p class="warn">${S.pending} file belum terunggah. File tetap aman di HP dan diunggah saat aplikasi dibuka dengan sinyal.</p>`:''}
+    <div class="row"><button class="btn sec" data-a="closelayer">Batal</button><button class="btn dng" data-a="dologout" data-miss="${miss.length}">Keluar</button></div>
+  </div>`);
+}
+async function doLogout(miss){
+  let why='';
+  if(miss){
+    why=($('#why').value||'').trim();
+    if(!why){$('#why').focus();return toast('Isi alasan keluar dulu.');}
+    await saveMeta('~keluar',{reason:why,at:Date.now()});
+    if(CONFIG.SCRIPT_URL&&navigator.onLine){api('log',{user:S.session.user,note:`Keluar sebelum selesai (${SHIFTS[S.shift].label}, ${S.date}): ${why}`}).catch(()=>{});}
+  }
+  closeLayer();stopCam();stopGeo();ls.del('storelog.session');S.session=null;
+  await go('login');
+}
+async function doLogin(u,p){
+  if(!CONFIG.SCRIPT_URL){
+    if(CONFIG.DEMO_USERS[u]!==undefined&&CONFIG.DEMO_USERS[u]===p)return{ok:true,nama:u.charAt(0).toUpperCase()+u.slice(1)};
+    return{ok:false,msg:'Username atau PIN salah.'};
+  }
+  if(!navigator.onLine)return{ok:false,msg:'Login butuh sinyal internet.'};
+  try{return await api('login',{user:u,pin:p});}
+  catch(e){return{ok:false,msg:'Tidak bisa menghubungi server. Cek SCRIPT_URL dan sinyal.'};}
+}
+
+document.addEventListener('submit',async e=>{
+  if(e.target.id!=='loginForm')return;
+  e.preventDefault();
+  const u=$('#lu').value.trim().toLowerCase(),p=$('#lp').value,btn=$('#lbtn'),err=$('#lerr');
+  btn.disabled=true;btn.textContent='Memeriksa…';err.textContent='';
+  const r=await doLogin(u,p);
+  if(r.ok){
+    S.session={user:u,nama:r.nama||u};ls.set('storelog.session',JSON.stringify(S.session));
+    await go('home');syncAll(false);
+  }else{err.textContent=r.msg||'Login gagal.';btn.disabled=false;btn.textContent='Masuk';}
+});
+document.addEventListener('change',e=>{
+  if(e.target.id==='meter'&&S.catId)saveMeta(S.catId,{meter:e.target.value.trim()});
+});
+document.addEventListener('click',async e=>{
+  const t=e.target.closest('[data-a]');if(!t)return;
+  const a=t.dataset.a;
+  switch(a){
+    case 'theme':{const cur=document.documentElement.dataset.theme==='dark'?'light':'dark';ls.set('storelog.theme',cur);document.documentElement.dataset.theme=cur;render();break;}
+    case 'logout':askLogout();break;
+    case 'dologout':doLogout(+t.dataset.miss);break;
+    case 'shift':S.shift=t.dataset.v;ls.set('storelog.shift',S.shift);await loadDay();render();break;
+    case 'open':go('cat',t.dataset.id);break;
+    case 'back':go('home');break;
+    case 'sync':syncAll(true);break;
+    case 'camtoggle':if(S.camOn)stopCam();else await startCam();paintCam();break;
+    case 'flip':S.facing=S.facing==='environment'?'user':'environment';await startCam();paintCam();break;
+    case 'shoot':shoot();break;
+    case 'view':openViewer(t.dataset.id);break;
+    case 'delfoto':askDelete(t.dataset.id);break;
+    case 'confdel':doDelete(t.dataset.id);break;
+    case 'resetcat':askResetCat();break;
+    case 'confresetcat':doResetCat();break;
+    case 'resetshift':askResetShift();break;
+    case 'confresetshift':doResetShift();break;
+    case 'closelayer':closeLayer();break;
+    case 'finish':finishCat();break;
+    case 'reopen':await saveMeta(S.catId,{done:false});await go('cat',S.catId);break;
+    case 'seecollage':showCollage(curCat(),false);break;
+    case 'closesheet':closeSheet();break;
+    case 'dl':downloadPage(+t.dataset.i);break;
+    case 'share':sharePages();break;
+  }
+});
+
+/* ============================================================
+   Mulai
+   ============================================================ */
+(async function boot(){
+  applyTheme();
+  try{await openDB();}catch(e){$('#app').innerHTML='<p style="padding:24px">Penyimpanan lokal tidak tersedia di browser ini.</p>';return;}
+  S.shift=ls.get('storelog.shift')||(new Date().getHours()<14?'pagi':'siang');
+  const saved=ls.get('storelog.session');
+  if(saved){try{S.session=JSON.parse(saved);}catch(e){}}
+  if(S.session){await loadDay();S.view='home';startGeo();}
+  render();
+  setInterval(tick,1000);
+  addEventListener('online',()=>{paintSync();syncAll(false);});
+  addEventListener('offline',paintSync);
+  document.addEventListener('visibilitychange',()=>{
+    if(document.hidden){if(S.camOn){stopCam();paintCam();}stopGeo();}
+    else if(S.session)startGeo();
+  });
+  syncAll(false);
+})();
+})();
+</script>
 </body>
 </html>
