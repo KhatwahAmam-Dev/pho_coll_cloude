@@ -188,7 +188,7 @@ const CONFIG = {
   STORE_NAME: 'MM — KLM',          
   SCRIPT_URL: '',                  
   API_KEY: 'ganti-dengan-kode-rahasia', 
-  DEMO_USERS: { demo: '1234' },     
+  KLM_USERS: { KLM: '1234' },     
   PHOTO_W: 960,                     
   JPEG_Q: 0.78,
   // GPS. Angka akurasi dari browser = radius dalam meter (tingkat kepercayaan 95% menurut spesifikasi).
@@ -350,7 +350,7 @@ const dropLocalCollages=grp=>idb('collages','readwrite',s=>{
 });
 const dropUrl=id=>{if(urls.has(id)){URL.revokeObjectURL(urls.get(id));urls.delete(id);}};
 async function syncAll(manual){
-  if(!CONFIG.SCRIPT_URL){if(manual)toast('Mode demo: isi SCRIPT_URL agar foto masuk ke Google Drive.');return;}
+  if(!CONFIG.SCRIPT_URL){if(manual)toast('Mode KLM: isi SCRIPT_URL agar foto masuk ke Google Drive.');return;}
   if(!navigator.onLine){if(manual)toast('Sedang offline. Upload jalan otomatis saat sinyal kembali.');return;}
   if(syncing)return;
   syncing=true;paintSync();
@@ -375,7 +375,7 @@ async function syncAll(manual){
 }
 function paintSync(){
   let txt,cls;
-  if(!CONFIG.SCRIPT_URL){txt='Mode demo';cls='demo';}
+  if(!CONFIG.SCRIPT_URL){txt='Mode KLM';cls='KLM';}
   else if(!navigator.onLine){txt=S.pending?`Offline, ${S.pending} menunggu`:'Offline';cls='off';}
   else if(syncing){txt='Mengunggah…';cls='busy';}
   else if(S.pending){txt=`${S.pending} menunggu upload`;cls='wait';}
@@ -645,7 +645,7 @@ async function showCollage(c,fresh){
     }catch(e){console.error(e);closeLayer();return toast('Collage gagal dibuat. Coba lagi.');}
   }
   sheet={cat:c,fresh,pages:blobs.map(b=>({blob:b,url:URL.createObjectURL(b)}))};
-  const cloud=CONFIG.SCRIPT_URL?'Collage masuk antrean upload ke cloud.':'Mode demo: collage hanya tersimpan di HP.';
+  const cloud=CONFIG.SCRIPT_URL?'Collage masuk antrean upload ke cloud.':'Mode KLM: collage hanya tersimpan di HP.';
   layer(`<div class="scrim" data-a="closesheet"></div>
   <div class="sheet" role="dialog" aria-label="Collage ${esc(c.name)}">
     <div><h2>Collage ${esc(c.name)}</h2><p>${cloud} Mengirim ke grup itu opsional.</p></div>
@@ -709,7 +709,7 @@ function tplLogin(){
       <label class="field">PIN<input id="lp" type="password" inputmode="numeric" autocomplete="current-password" required></label>
       <p class="err" id="lerr" role="alert"></p>
       <button class="btn pri" type="submit" id="lbtn">Masuk</button>
-      ${CONFIG.SCRIPT_URL?'':'<p class="hint">Mode demo aktif. Masuk dengan username demo dan PIN 1234.</p>'}
+      ${CONFIG.SCRIPT_URL?'':'<p class="hint">Mode KLM aktif. Masuk dengan username KLM dan PIN 1234.</p>'}
     </form>
   </div>`;
 }
@@ -952,7 +952,7 @@ async function doLogout(miss){
 }
 async function doLogin(u,p){
   if(!CONFIG.SCRIPT_URL){
-    if(CONFIG.DEMO_USERS[u]!==undefined&&CONFIG.DEMO_USERS[u]===p)return{ok:true,nama:u.charAt(0).toUpperCase()+u.slice(1)};
+    if(CONFIG.KLM_USERS[u]!==undefined&&CONFIG.KLM_USERS[u]===p)return{ok:true,nama:u.charAt(0).toUpperCase()+u.slice(1)};
     return{ok:false,msg:'Username atau PIN salah.'};
   }
   if(!navigator.onLine)return{ok:false,msg:'Login butuh sinyal internet.'};
