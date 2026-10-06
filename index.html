@@ -201,6 +201,8 @@ const CONFIG = {
 const AKTIVITAS = { id:'aktivitas', name:'Aktivitas Harian', icon:'🛒', min:1, max:30, req:true };
 const EXPIRED   = { id:'expired',   name:'Cek Expired',      icon:'📅', min:1, max:30, req:true };
 const RAK       = { id:'rak',       name:'Kebersihan Rak',   icon:'🧽', min:3, max:5,  req:true };
+const FULLDISPLAY = { id:'full',    name:'Full Display',     icon:'🖼️', min:1, max:10, req:false };
+const TEMABEBAS   = { id:'bebas',   name:'Tema Bebas',       icon:'📝', min:1, max:10, req:false, custom:true };
 const SHIFTS = {
   pagi: { label:'Shift Pagi', cats:[
     { id:'buka',    name:'Buka Toko',         icon:'🔓', min:1, max:1, req:true },
@@ -209,7 +211,9 @@ const SHIFTS = {
     RAK,
     { id:'brief_pagi', name:'Briefing Pagi',  icon:'👥', min:1, max:2, req:true },
     EXPIRED,
-    AKTIVITAS
+    AKTIVITAS,
+    FULLDISPLAY,
+    TEMABEBAS
   ]},
   siang: { label:'Shift Siang', cats:[
     { id:'serah',   name:'Serah Terima Tugas',icon:'🤝', min:1, max:3, req:true },
@@ -219,7 +223,9 @@ const SHIFTS = {
     RAK,
     { id:'promo',   name:'Implementasi Promo',icon:'🏷️', min:1, max:10, req:false },
     { id:'kwh_malam',name:'KWH Listrik Malam',icon:'⚡', min:1, max:1, req:true, meter:true },
-    { id:'closing', name:'Closing',           icon:'🔒', min:1, max:3, req:true }
+    { id:'closing', name:'Closing',           icon:'🔒', min:1, max:3, req:true },
+    FULLDISPLAY,
+    TEMABEBAS
   ]}
 };
 
@@ -240,6 +246,7 @@ const fmtTS=ms=>{const d=new Date(ms);return `${pad(d.getHours())}:${pad(d.getMi
 const fmtDateLong=d=>`${HARI[d.getDay()]}, ${d.getDate()} ${BULAN[d.getMonth()]} ${d.getFullYear()}`;
 const tzLabel=()=>({'-420':'WIB','-480':'WITA','-540':'WIT'}[String(new Date().getTimezoneOffset())]||'');
 const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+const dispName=(c,m)=>(c.custom&&m&&m.customName)?m.customName:c.name;
 const ls={get:k=>{try{return localStorage.getItem(k);}catch(e){return null;}},set:(k,v)=>{try{localStorage.setItem(k,v);}catch(e){}},del:k=>{try{localStorage.removeItem(k);}catch(e){}}};
 const ICON={
   back:'<path d="M15 5l-7 7 7 7"/>',
@@ -689,6 +696,7 @@ function status(c){
   if(m.done)return['done','Selesai'];
   if(n===0)return c.req?['todo','Belum']:['todo','Opsional'];
   if(n<c.min)return['part','Kurang foto'];
+  if(c.custom&&!(m&&m.customName))return['part','Isi nama tema'];
   return['ready','Siap diselesaikan'];
 }
 function rangeText(list){
@@ -744,9 +752,10 @@ function tplHome(){
         const list=S.photos[c.id]||[],n=list.length,[st,lbl]=status(c);
         const np=Math.min(Math.max(c.min,n),10);
         const pips=Array.from({length:np},(_,i)=>`<i class="${i<n?'f':''}"></i>`).join('');
+        const nm=dispName(c,S.meta[c.id]);
         return `<li><button class="tag st-${st}" data-a="open" data-id="${c.id}">
           <span class="edge"></span><span class="ico" aria-hidden="true">${c.icon}</span>
-          <span><span class="tname">${esc(c.name)}</span>
+          <span><span class="tname">${esc(nm)}</span>
             <span class="tmeta"><span class="pips">${pips}</span>${n} foto${c.min===c.max?'':', target '+c.min+' sampai '+c.max}</span></span>
           <span class="tside"><span class="pill">${lbl}</span><span class="rg">${rangeText(list)}</span></span>
         </button></li>`;}).join('')}
@@ -763,14 +772,15 @@ function stripHTML(){
 function tplCat(){
   const c=curCat(),list=S.photos[c.id]||[],m=S.meta[c.id]||{},done=!!m.done;
   const target=c.min===c.max?c.min:`${c.min}–${c.max}`;
+  const nm=dispName(c,m);
   return `<div class="screen cam">
     <header class="cam-top">
       <button class="icon-btn" data-a="back" aria-label="Kembali">${svg('back')}</button>
-      <div><div class="ctitle">${esc(c.name)}</div><div class="csub" id="camSub"></div></div>
+      <div><div class="ctitle">${esc(nm)}</div><div class="csub" id="camSub"></div></div>
       <div class="cbadge" id="camCnt"></div>
     </header>
     ${done?`<div class="donebox"><div class="ok" aria-hidden="true">✓</div>
-        <h2>Kegiatan selesai</h2>
+        <h2>${c.custom?esc(nm)+' — selesai':'Kegiatan selesai'}</h2>
         <p>${list.length} foto, rentang waktu ${rangeText(list)}${tzLabel()?' '+tzLabel():''}.${m.meter?' Angka meter '+esc(m.meter)+' kWh.':''}</p>
         <div class="row"><button class="btn pri" data-a="seecollage">Lihat collage</button><button class="btn sec" data-a="reopen">Buka kembali</button></div></div>`
     :`<div class="vf" id="vf">
@@ -786,6 +796,7 @@ function tplCat(){
           <button class="flip" id="btnFlip" data-a="flip" aria-label="Balik kamera">${svg('flip',22)}</button>
         </div></div>`}
     <div class="strip" id="strip">${stripHTML()}</div>
+    ${c.custom&&!done?`<label class="meter">Nama tema<input id="temaName" placeholder="contoh: Dekorasi Kemerdekaan" value="${esc(m.customName||'')}"></label>`:''}
     ${c.meter&&!done?`<label class="meter">Angka meter KWH<input id="meter" inputmode="decimal" placeholder="contoh 12345.6" value="${esc(m.meter||'')}"></label>`:''}
     ${(list.length||done)?`<div class="tools"><button class="link" data-a="resetcat">Reset kegiatan ini</button></div>`:''}
     ${done?'':`<div class="cta"><button class="btn pri" id="btnFinish" data-a="finish">Selesai dan buat collage</button></div>`}
@@ -919,6 +930,11 @@ async function doResetShift(){
 async function finishCat(){
   const c=curCat(),list=S.photos[c.id]||[];
   if(list.length<c.min)return toast(`Minimal ${c.min} foto untuk kegiatan ini.`);
+  if(c.custom){
+    const v=($('#temaName').value||'').trim();
+    if(!v){$('#temaName').focus();return toast('Isi nama tema dulu.');}
+    await saveMeta(c.id,{customName:v});
+  }
   if(c.meter){
     const v=($('#meter').value||'').trim();
     if(!v){$('#meter').focus();return toast('Isi angka meter KWH dulu.');}
@@ -926,7 +942,7 @@ async function finishCat(){
   }
   await saveMeta(c.id,{done:true,doneAt:Date.now()});
   stopCam();
-  await showCollage(c,true);
+  await showCollage({...c,name:dispName(c,S.meta[c.id])},true);
 }
 function askLogout(){
   const miss=SHIFTS[S.shift].cats.filter(c=>c.req&&!(S.meta[c.id]&&S.meta[c.id].done));
@@ -973,6 +989,7 @@ document.addEventListener('submit',async e=>{
 });
 document.addEventListener('change',e=>{
   if(e.target.id==='meter'&&S.catId)saveMeta(S.catId,{meter:e.target.value.trim()});
+  if(e.target.id==='temaName'&&S.catId)saveMeta(S.catId,{customName:e.target.value.trim()});
 });
 document.addEventListener('click',async e=>{
   const t=e.target.closest('[data-a]');if(!t)return;
@@ -998,7 +1015,7 @@ document.addEventListener('click',async e=>{
     case 'closelayer':closeLayer();break;
     case 'finish':finishCat();break;
     case 'reopen':await saveMeta(S.catId,{done:false});await go('cat',S.catId);break;
-    case 'seecollage':showCollage(curCat(),false);break;
+    case 'seecollage':{const c=curCat();showCollage({...c,name:dispName(c,S.meta[c.id])},false);break;}
     case 'closesheet':closeSheet();break;
     case 'dl':downloadPage(+t.dataset.i);break;
     case 'share':sharePages();break;
