@@ -20,7 +20,7 @@
  */
 const CONFIG = {
   API_KEY: 'ganti-dengan-kode-rahasia',
-  ROOT_FOLDER_ID: 'ID_FOLDER_DRIVE',
+  ROOT_FOLDER_ID: '17FWIIdTwpEfBNibnoUhz3vx24IFfdvhk',
   SHEET_ID: 'ID_GOOGLE_SHEET'
 };
 
